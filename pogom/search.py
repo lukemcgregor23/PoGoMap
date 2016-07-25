@@ -103,7 +103,7 @@ def search_thread(args):
     i, total_steps, step_location, step, sem = args
 
     log.info('Scanning step {:d} of {:d} started.'.format(step, total_steps))
-    log.debug('Scan location is {:f}, {:f}'.format(step_location[0], step_location[1]))
+    log.info('Scan location is {:f}, {:f}'.format(step_location[0], step_location[1]))
 
     response_dict = {}
     failed_consecutive = 0
@@ -175,7 +175,6 @@ def search(args, i):
 
     if search_threads:
         process_search_threads(search_threads, curr_steps, total_steps)
-
 
 def search_loop(args):
     i = 0

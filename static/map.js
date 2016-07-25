@@ -1,13 +1,30 @@
-document.addEventListener("DOMContentLoaded", function () {
-    if (!Notification) {
-        console.log('could not load notifications');
-        return;
-    }
+document.addEventListener('DOMContentLoaded', function () {
+  if (!Notification) {
+    alert('Desktop notifications not available in your browser. Try Chromium.'); 
+    return;
+  }
 
-    if (Notification.permission !== "granted") {
-        Notification.requestPermission();
-    }
+  if (Notification.permission !== "granted")
+	alert('Desktop notifications not Enabled in your browser. Please allow permission.');
+    Notification.requestPermission();
 });
+
+function notifyMe() {
+  if (Notification.permission !== "granted")
+    Notification.requestPermission();
+  else {
+    var notification = new Notification('Notification title', {
+      icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+      body: "Hey there! You've been notified!",
+    });
+
+    notification.onclick = function () {
+      window.open("http://stackoverflow.com/a/13328397/1269037");      
+    };
+
+  }
+
+}
 
 var $selectExclude = $("#exclude-pokemon");
 var $selectNotify = $("#notify-pokemon");
@@ -106,14 +123,6 @@ function initMap() {
 
     map.setMapTypeId(localStorage['map_style']);
 
-    marker = new google.maps.Marker({
-        position: {
-            lat: center_lat,
-            lng: center_lng
-        },
-        map: map,
-        animation: google.maps.Animation.DROP
-    });
 
     initSidebar();
 };
@@ -122,24 +131,7 @@ function initSidebar() {
     $('#gyms-switch').prop('checked', localStorage.showGyms === 'true');
     $('#pokemon-switch').prop('checked', localStorage.showPokemon === 'true');
     $('#pokestops-switch').prop('checked', localStorage.showPokestops === 'true');
-    $('#scanned-switch').prop('checked', localStorage.showScanned === 'true');
 
-    var searchBox = new google.maps.places.SearchBox(document.getElementById('next-location'));
-
-    searchBox.addListener('places_changed', function() {
-        var places = searchBox.getPlaces();
-
-        if (places.length == 0) {
-            return;
-        }
-
-        var loc = places[0].geometry.location;
-        $.post("/next_loc?lat=" + loc.lat() + "&lon=" + loc.lng(), {}).done(function (data) {
-            $("#next-location").val("");
-            map.setCenter(loc);
-            marker.setPosition(loc);
-        });
-    });
 }
 
 var pad = function (number) { return number <= 99 ? ("0" + number).slice(-2) : number; }
@@ -516,18 +508,6 @@ $('#pokestops-switch').change(function() {
     }
 });
 
-
-$('#scanned-switch').change(function() {
-    localStorage["showScanned"] = this.checked;
-    if (this.checked) {
-        updateMap();
-    } else {
-        $.each(map_scanned, function(key, value) {
-            map_scanned[key].marker.setMap(null);
-        });
-        map_scanned = {}
-    }
-});
 
 var updateLabelDiffTime = function() {
     $('.label-countdown').each(function(index, element) {
