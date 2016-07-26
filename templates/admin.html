@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            Place Autocomplete
+        </title>
+        <meta content="initial-scale=1.0, user-scalable=no" name="viewport">
+        <meta charset="utf-8">
+        <style>
+        #pac-container {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 300px;
+        }
+
+        #pac-container:focus {
+        border-color: #4d90fe;
+        }
+
+        .pac-container {
+        font-family: Roboto;
+        }
+		
+		.pac-container:after {
+			background-image: none !important;
+			height: 0px;
+		}
+		
+		#msg {
+			color: green;
+		}
+        </style>
+        <script src="https://code.jquery.com/jquery-1.10.2.js">
+        </script>
+    </head>
+    <body>
+        <p>
+            Type 'correct' to validate.
+        </p>
+        <form>
+            <div>
+                <input id="pac-container" type="text">
+            </div>
+        </form>
+		<span id="msg"></span>
+		<script>
+		function initMap(){
+			var searchBox = new google.maps.places.SearchBox(document.getElementById('pac-container'));
+			var infowindow = new google.maps.InfoWindow();
+			searchBox.addListener('places_changed', function() {
+				infowindow.close();
+				var places = searchBox.getPlaces();
+				if (places.length == 0) {
+					return;
+				}
+				var loc = places[0].geometry.location;
+				$.post("next_loc?lat=" + loc.lat() + "&lon=" + loc.lng(), {}).done(function (data) {
+					$("#pac-container").val("");
+					$( "#msg" ).text( "Location Set" ).show().fadeOut( 10000 );
+				});
+			});
+		}
+		</script>
+        <script>
+        </script> 
+        <script async defer src=
+        "https://maps.googleapis.com/maps/api/js?key=AIzaSyBXgCSwkOZM8oMf-jSS64yJFfMNzPZ_Pv8&libraries=places&callback=initMap">
+        </script>
+    </body>
+</html>

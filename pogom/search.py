@@ -102,8 +102,8 @@ def login(args, position):
 def search_thread(args):
     i, total_steps, step_location, step, sem = args
 
-    log.info('Scanning step {:d} of {:d} started.'.format(step, total_steps))
-    log.info('Scan location is {:f}, {:f}'.format(step_location[0], step_location[1]))
+    log.debug('Scanning step {:d} of {:d} started.'.format(step, total_steps))
+    log.debug('Scan location is {:f}, {:f}'.format(step_location[0], step_location[1]))
 
     response_dict = {}
     failed_consecutive = 0
@@ -145,7 +145,7 @@ def search(args, i):
         remaining_time = api._auth_provider._ticket_expire/1000 - time.time()
 
         if remaining_time > 60:
-            log.info("Skipping Pokemon Go login process since already logged in for another {:.2f} seconds".format(remaining_time))
+            log.debug("Skipping Pokemon Go login process since already logged in for another {:.2f} seconds".format(remaining_time))
         else:
             login(args, position)
     else:
@@ -180,7 +180,7 @@ def search_loop(args):
     i = 0
     try:
         while True:
-            log.info("Map iteration: {}".format(i))
+            log.debug("Map iteration: {}".format(i))
             search(args, i)
             log.info("Scanning complete.")
             if args.scan_delay > 1:
